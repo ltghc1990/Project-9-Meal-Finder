@@ -1,0 +1,20 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgba(31, 34, 32, 0.685);
+}
+
+.bg-dark {
+  background-color: rgba(31, 34, 32, 0.685) !important;
+}
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
