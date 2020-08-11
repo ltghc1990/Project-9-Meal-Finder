@@ -17,4 +17,10 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.modal-img {
+  width: 50%;
+  margin: 14px auto 0;
 }
