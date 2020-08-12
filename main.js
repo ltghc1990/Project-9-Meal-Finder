@@ -36,9 +36,7 @@ async function fetchData(search) {
 function loadDataIntoDOM(data) {
   data.meals.forEach((element) => {
     const div = document.createElement("div");
-    div.classList.add("card");
     div.style.width = "18rem";
-
     div.innerHTML = ` 
   <img src="${element.strMealThumb}" class="card-img-top" alt="...">
   <div class="card-body">
@@ -46,8 +44,13 @@ function loadDataIntoDOM(data) {
     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Instructions</a>
   </div>
  `;
+    // delay so it loads smoothly
+    setTimeout(function () {
+      mealUIParent.appendChild(div);
+    }, 100);
+
     mealUIParent.classList.add("card", "card-body", "centered");
-    mealUIParent.appendChild(div);
+    div.classList.add("card", "fadeIn");
     inputMeal.value = "";
   });
 }
