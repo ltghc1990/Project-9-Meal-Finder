@@ -2,11 +2,10 @@ inputMeal = document.getElementById("searchMeal");
 formParent = document.querySelector("form");
 
 enterBtn = document.getElementById("enter");
-
+random = document.querySelector("#random");
 mealUIParent = document.getElementById("mealUI");
 
-enterBtn.addEventListener("click", preFetchData);
-
+// -----FUNCTIONS--------
 function preFetchData(e) {
   e.preventDefault();
   // clear dom if there are elements there
@@ -26,30 +25,52 @@ async function fetchData(search) {
   );
   const data = await res.json();
 
-  // load meals into DOM
+  if (data.meals === null) {
+    alert(`no match with the keyword: ${search}`);
+  } else {
+    // load meals into DOM
+    loadDataIntoDOM(data);
+  }
+}
+
+function loadDataIntoDOM(data) {
   data.meals.forEach((element) => {
     const div = document.createElement("div");
     div.classList.add("card");
     div.style.width = "18rem";
 
     div.innerHTML = ` 
-    <img src="${element.strMealThumb}" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title" data-mealID="${element.idMeal}">${element.strMeal}</h5>
-      <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Instructions</a>
-    </div>
-   `;
+  <img src="${element.strMealThumb}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title" data-mealID="${element.idMeal}">${element.strMeal}</h5>
+    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Instructions</a>
+  </div>
+ `;
     mealUIParent.classList.add("card", "card-body", "centered");
     mealUIParent.appendChild(div);
     inputMeal.value = "";
   });
+}
 
-  return data;
+// to combine the ingredients and measurements from the api
+function getIngredients(meal) {
+  for (let i = 1; i < 20; i++) {
+    if (meal[`strIngredient${i}`] !== "") {
+      const li = document.createElement("li");
+      li.classList.add("list-group-item");
+      li.innerText = meal[`strIngredient${i}`] + " - " + meal[`strMeasure${i}`];
+
+      document.getElementById("ingredients").appendChild(li);
+    }
+  }
 }
 
 function clearDom() {
   mealUIParent.innerHTML = "";
 }
+
+// ------EVENT LISTENERS----------
+enterBtn.addEventListener("click", preFetchData);
 
 mealUIParent.addEventListener("click", (e) => {
   e.preventDefault();
@@ -110,15 +131,13 @@ mealUIParent.addEventListener("click", (e) => {
   }
 });
 
-// to combine the ingredients and measurements from the api
-function getIngredients(meal) {
-  for (let i = 1; i < 20; i++) {
-    if (meal[`strIngredient${i}`] !== "") {
-      const li = document.createElement("li");
-      li.classList.add("list-group-item");
-      li.innerText = meal[`strIngredient${i}`] + " - " + meal[`strMeasure${i}`];
-
-      document.getElementById("ingredients").appendChild(li);
-    }
-  }
-}
+random.addEventListener("click", (e) => {
+  e.preventDefault();
+  clearDom();
+  fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      loadDataIntoDOM(data);
+    });
+});
